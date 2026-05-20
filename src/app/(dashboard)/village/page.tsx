@@ -8,7 +8,7 @@ import { XpBar } from "@/components/tasks/xp-bar";
 import { Sword, Star, Coins } from "lucide-react";
 
 export default function VillagePage() {
-  const [profile, setProfile] = useState({ xp: 0, level: 1, gold: 0, streak_days: 0 });
+  const [profile, setProfile] = useState({ xp: 0, level: 1, gold: 0, streak_days: 0, hp: 100, max_hp: 100, energy: 100, max_energy: 100 });
   const [refreshKey, setRefreshKey] = useState(0);
   const supabase = createClient();
 
@@ -16,7 +16,7 @@ export default function VillagePage() {
     const fetchProfile = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const { data } = await supabase.from("profiles").select("xp, level, gold, streak_days").eq("id", user.id).single();
+      const { data } = await supabase.from("profiles").select("xp, level, gold, streak_days, hp, max_hp, energy, max_energy").eq("id", user.id).single();
       if (data) setProfile(data);
     };
     fetchProfile();
@@ -38,7 +38,8 @@ export default function VillagePage() {
       </div>
 
       {/* XP Bar */}
-      <XpBar xp={profile.xp} level={profile.level} gold={profile.gold} streak={profile.streak_days || 0} />
+      <XpBar xp={profile.xp} level={profile.level} gold={profile.gold} streak={profile.streak_days || 0}
+        hp={profile.hp || 100} maxHp={profile.max_hp || 100} energy={profile.energy || 100} maxEnergy={profile.max_energy || 100} />
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-4">

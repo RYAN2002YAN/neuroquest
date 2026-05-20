@@ -24,6 +24,13 @@ const monsterEmoji: Record<TaskDifficulty, string> = {
   hell: "👹",
 };
 
+function isOverdue(task: Task): boolean {
+  if (task.deadline && task.status === "active") {
+    return new Date(task.deadline) < new Date();
+  }
+  return false;
+}
+
 interface Props { task: Task; onComplete: () => void; }
 
 export function TaskCard({ task, onComplete }: Props) {
@@ -32,6 +39,7 @@ export function TaskCard({ task, onComplete }: Props) {
   const supabase = createClient();
   const typeInfo = TASK_TYPE_CONFIG[task.type as TaskType];
   const diffInfo = DIFFICULTY_CONFIG[task.difficulty as TaskDifficulty];
+  const overdue = isOverdue(task);
 
   const handleComplete = async () => {
     setCompleting(true);
@@ -76,7 +84,9 @@ export function TaskCard({ task, onComplete }: Props) {
       layout
     >
       <Card className={`p-4 border-2 transition-all ${
-        task.type === "urgent"
+        overdue
+          ? "border-red-700/40 bg-gradient-to-r from-red-950/10 to-stone-900/60 opacity-75"
+          : task.type === "urgent"
           ? "border-red-800/50 bg-gradient-to-r from-red-950/30 to-stone-900/80"
           : task.type === "main_quest"
           ? "border-amber-800/40 bg-gradient-to-r from-amber-950/20 to-stone-900/80"
@@ -91,6 +101,7 @@ export function TaskCard({ task, onComplete }: Props) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-stone-100 text-lg truncate">{task.title}</span>
+              {overdue && <Badge className="shrink-0 text-xs bg-red-700/60 text-red-200">⚠ 已过期</Badge>}
               <Badge style={{ background: diffInfo.color, color: "#fff" }} className="shrink-0 text-xs">
                 {diffInfo.label}
               </Badge>
