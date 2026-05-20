@@ -130,7 +130,82 @@ export default function ProfilePage() {
         <CardContent><BadgeGrid allDefs={achievementDefs} unlocked={achievements} /></CardContent>
       </Card>
 
+      {/* Mood Tracker (local only) */}
+      <MoodTracker />
+
       <Button variant="outline" onClick={handleLogout} className="w-full border-red-800/30 text-red-400 hover:bg-red-900/20"><LogOut className="h-4 w-4 mr-2" />登出</Button>
     </div>
+  );
+}
+
+// ─────────── Mood Tracker (LocalStorage ONLY — never uploaded) ───────────
+function MoodTracker() {
+  const [mood, setMood] = useState<string | null>(null);
+  const [history, setHistory] = useState<{ date: string; mood: string }[]>([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("nq-mood-history");
+    if (stored) setHistory(JSON.parse(stored));
+    const today = new Date().toISOString().split("T")[0];
+    const todayEntry = JSON.parse(stored || "[]").find((h: any) => h.date === today);
+    if (todayEntry) setMood(todayEntry.mood);
+  }, []);
+
+  const handleMood = (m: string) => {
+    const today = new Date().toISOString().split("T")[0];
+    const newHistory = [...history.filter(h => h.date !== today), { date: today, mood: m }];
+    setHistory(newHistory);
+    setMood(m);
+    localStorage.setItem("nq-mood-history", JSON.stringify(newHistory));
+  };
+
+  const moods = [
+    { key: "great", emoji: "😄", label: "很好" },
+    { key: "good", emoji: "🙂", label: "不错" },
+    { key: "ok", emoji: "😐", label: "一般" },
+    { key: "low", emoji: "😔", label: "低落" },
+    { key: "bad", emoji: "😢", label: "很差" },
+  ];
+
+  // Simple insight: if mood is low, suggest easy tasks
+  const lastWeek = history.slice(-7);
+  const avgMoodScore = lastWeek.reduce((s, h) => {
+    const scores: Record<string, number> = { great: 5, good: 4, ok: 3, low: 2, bad: 1 };
+    return s + (scores[h.mood] || 3);
+  }, 0) / Math.max(lastWeek.length, 1);
+
+  return (
+    <Card className="bg-stone-900/60 border-stone-800/40">
+      <CardHeader><CardTitle className="text-lg text-stone-200">🧠 情绪追踪 <span className="text-xs text-stone-500 font-normal ml-1">(仅本地存储)</span></CardTitle></CardHeader>
+      <CardContent className="space-y-3">
+        <p className="text-xs text-stone-500">今天感觉如何？所有数据都存储在浏览器本地，绝对不会上传。</p>
+        <div className="flex gap-2 justify-center">
+          {moods.map(m => (
+            <button key={m.key} onClick={() => handleMood(m.key)}
+              className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all text-sm ${mood === m.key ? "bg-amber-900/40 ring-1 ring-amber-500/50 scale-110" : "bg-stone-800/50 hover:bg-stone-700/50"}`}>
+              <span className="text-2xl">{m.emoji}</span>
+              <span className="text-xs text-stone-400">{m.label}</span>
+            </button>
+          ))}
+        </div>
+        {avgMoodScore < 3 && mood && (
+          <div className="bg-amber-950/30 border border-amber-800/20 rounded-lg p-3 text-sm text-amber-200">
+            💡 检测到你最近情绪有些低落。试试完成一个「简单」难度的小任务——不需要追求完美，只要开始就是胜利。
+          </div>
+        )}
+        {history.length > 0 && (
+          <div className="flex items-end gap-0.5 h-10 mt-2">
+            {history.slice(-14).map((h, i) => {
+              const scores: Record<string, number> = { great: 5, good: 4, ok: 3, low: 2, bad: 1 };
+              const h_pct = ((scores[h.mood] || 3) / 5) * 100;
+              return (
+                <div key={i} className="flex-1 rounded-t"
+                  style={{ height: `${h_pct}%`, background: `hsl(${h_pct * 0.6}, 60%, 50%)`, opacity: 0.5 + (h_pct / 200) }} />
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
