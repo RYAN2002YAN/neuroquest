@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Sword, Scroll, Users, User, LogOut, Home, ShoppingBag } from "lucide-react";
+import { Sword, Scroll, Users, User, LogOut, Home, ShoppingBag, Star } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
@@ -21,6 +21,7 @@ export function Navbar() {
 
   const links = [
     { href: "/village", label: "村庄", icon: Home },
+    { href: "/planet", label: "星球", icon: Star },
     { href: "/quests", label: "任务", icon: Scroll },
     { href: "/shop", label: "商店", icon: ShoppingBag },
     { href: "/guild", label: "公会", icon: Users },
