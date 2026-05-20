@@ -3,6 +3,8 @@
 import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
 import { Star, Coins, Flame, Heart, Zap } from "lucide-react";
+import { AnimatedNumber } from "@/components/ui/animated-number";
+import { useAnimation } from "@/lib/animation-context";
 import { xpForLevel } from "@/lib/types";
 
 interface Props { xp: number; level: number; gold: number; streak: number; hp: number; maxHp: number; energy: number; maxEnergy: number; }
@@ -19,9 +21,9 @@ export function XpBar({ xp, level, gold, streak, hp, maxHp, energy, maxEnergy }:
       <div className="flex items-center justify-between text-sm">
         <span className="text-amber-300 font-bold text-lg">Lv.{level}</span>
         <div className="flex items-center gap-4 text-xs text-stone-400">
-          <span><Star className="h-3 w-3 inline text-amber-400 mr-1" />{xp}/{needed} XP</span>
-          <span><Coins className="h-3 w-3 inline text-yellow-500 mr-1" />{gold}</span>
-          {streak > 0 && <span className="text-orange-400"><Flame className="h-3 w-3 inline mr-1" />{streak}天</span>}
+          <span><Star className="h-3 w-3 inline text-amber-400 mr-1" /><AnimatedNumber value={xp} />/{needed} XP</span>
+          <span><Coins className="h-3 w-3 inline text-yellow-500 mr-1" /><AnimatedNumber value={gold} /></span>
+          {streak > 0 && <span className="text-orange-400"><Flame className="h-3 w-3 inline mr-1" /><AnimatedNumber value={streak} />天</span>}
         </div>
         <span className="text-xs text-stone-500">{xpPct}%</span>
       </div>

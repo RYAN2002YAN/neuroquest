@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Sword, Scroll, Sun, AlertTriangle, Check, Loader2, Coins, Star } from "lucide-react";
+import { AnimatedNumber, Pressable } from "@/components/ui/animated-number";
 import { TASK_TYPE_CONFIG, DIFFICULTY_CONFIG, type Task, type TaskType, type TaskDifficulty } from "@/lib/types";
 
 const typeIcons: Record<TaskType, React.ReactNode> = {
@@ -122,11 +123,13 @@ export function TaskCard({ task, onComplete }: Props) {
             </div>
           </div>
 
-          <Button onClick={handleComplete} disabled={completing}
-            size="sm"
-            className="shrink-0 bg-emerald-600 hover:bg-emerald-500 text-white h-10 w-10 rounded-full p-0">
-            {completing ? <Loader2 className="h-5 w-5 animate-spin" /> : <Check className="h-5 w-5" />}
-          </Button>
+          <Pressable>
+            <Button onClick={handleComplete} disabled={completing}
+              size="sm"
+              className="shrink-0 bg-emerald-600 hover:bg-emerald-500 text-white h-10 w-10 rounded-full p-0">
+              {completing ? <Loader2 className="h-5 w-5 animate-spin" /> : <Check className="h-5 w-5" />}
+            </Button>
+          </Pressable>
         </div>
 
         {/* Reward animation */}
@@ -136,8 +139,8 @@ export function TaskCard({ task, onComplete }: Props) {
             animate={{ opacity: 1, y: 0 }}
             className="mt-3 flex items-center gap-3 text-sm font-bold bg-emerald-900/50 rounded-lg p-2"
           >
-            <span className="text-amber-400">+{task.xp_reward} XP</span>
-            <span className="text-yellow-400">+{task.gold_reward} 💰</span>
+            <span className="text-amber-400">+<AnimatedNumber value={task.xp_reward} /> XP</span>
+            <span className="text-yellow-400">+<AnimatedNumber value={task.gold_reward} /> 💰</span>
             <span className="text-emerald-400">任务完成！</span>
           </motion.div>
         )}

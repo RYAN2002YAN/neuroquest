@@ -3,15 +3,17 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useAnimation } from "@/lib/animation-context";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Sword, Scroll, Users, User, LogOut, Home, ShoppingBag, Star } from "lucide-react";
+import { Sword, Scroll, Users, User, LogOut, Home, ShoppingBag, Star, Sparkles } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
+  const { enabled, toggle } = useAnimation();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -37,6 +39,13 @@ export function Navbar() {
         </Link>
 
         <div className="flex items-center gap-1">
+          {/* Animation toggle */}
+          <Button variant="ghost" size="icon" onClick={toggle}
+            title={enabled ? "关闭动画（ADHD友善）" : "开启动画"}
+            className={`rounded-full ${enabled ? "text-amber-400" : "text-stone-600"}`}>
+            <Sparkles className="h-4 w-4" />
+          </Button>
+
           {links.map(link => (
             <Link key={link.href} href={link.href}>
               <Button variant={pathname === link.href ? "secondary" : "ghost"} size="sm"

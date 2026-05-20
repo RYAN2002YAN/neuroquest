@@ -54,22 +54,21 @@ export default function PlanetPage() {
 
     if (tasks) {
       const completedByType: Record<string, number> = {};
-      tasks.filter(t => t.status === "completed").forEach(t => {
-        completedByType[t.type] = (completedByType[t.type] || 0) + 1;
+      const pendingByType: Record<string, number> = {};
+      tasks.forEach(t => {
+        if (t.status === "completed") completedByType[t.type] = (completedByType[t.type] || 0) + 1;
+        else pendingByType[t.type] = (pendingByType[t.type] || 0) + 1;
       });
 
       const areaProgress: AreaProgress[] = AREA_DEFS.map(def => {
         const count = def.taskTypes.reduce((sum, tt) => sum + (completedByType[tt] || 0), 0);
+        const pending = def.taskTypes.reduce((sum, tt) => sum + (pendingByType[tt] || 0), 0);
         const level = computeLevel(count);
         return {
-          id: def.id,
-          name: def.name,
-          icon: def.icon,
-          color: def.color,
-          taskCount: Math.max(count || 1, 1), // min 1 for visible slice
-          level,
-          maxLevel: 5,
-          buildings: [levelBuildings[level]],
+          id: def.id, name: def.name, icon: def.icon, color: def.color,
+          taskCount: Math.max(count || 1, 1),
+          level, maxLevel: 5, buildings: [levelBuildings[level]],
+          pendingCount: pending,
         };
       });
 
