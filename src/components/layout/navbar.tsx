@@ -7,7 +7,7 @@ import { useAnimation } from "@/lib/animation-context";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Sword, Scroll, Users, User, LogOut, Home, ShoppingBag, Star, Sparkles, Sprout, Trees, Gem } from "lucide-react";
+import { Sword, Scroll, Users, User, LogOut, Home, ShoppingBag, Star, Sparkles, Sprout, Trees, Gem, Tent } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
@@ -24,6 +24,7 @@ export function Navbar() {
   const links = [
     { href: "/village", label: "村庄", icon: Home },
     { href: "/planet", label: "星球", icon: Star },
+    { href: "/village-life", label: "村庄", icon: Tent },
     { href: "/farm", label: "农场", icon: Sprout },
     { href: "/focus", label: "专注", icon: Trees },
     { href: "/collections", label: "博物馆", icon: Gem },

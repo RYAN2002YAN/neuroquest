@@ -11,7 +11,7 @@ import { QuickAdd } from "@/components/tasks/quick-add";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { XpBar } from "@/components/tasks/xp-bar";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Trees, Mountain, Waves, Pickaxe, Star } from "lucide-react";
+import { Home, Trees, Mountain, Waves, Pickaxe, Star, ChevronRight } from "lucide-react";
 
 const AREA_DEFS = [
   { id: "residential", name: "住宅区", icon: <Home className="h-4 w-4" />, color: "#e8b86d", taskTypes: ["daily"], landEmoji: "🏘️" },
@@ -90,6 +90,13 @@ export default function PlanetPage() {
 
       <XpBar xp={profile.xp} level={profile.level} gold={profile.gold} streak={profile.streak_days}
         hp={profile.hp} maxHp={profile.maxHp} energy={profile.energy} maxEnergy={profile.maxEnergy} />
+
+      {/* Village entrance */}
+      <div className="flex justify-end">
+        <a href="/village-life" className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600/20 border border-amber-600/40 rounded-full text-amber-300 text-sm hover:bg-amber-600/30 transition-colors">
+          🏘️ 进入我的村庄 <ChevronRight className="h-4 w-4" />
+        </a>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Planet */}
