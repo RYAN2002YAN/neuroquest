@@ -26,7 +26,7 @@ export function Navbar() {
     { href: "/planet", label: "星球", icon: Star },
     { href: "/quests", label: "任务", icon: Scroll },
     { href: "/shop", label: "商店", icon: ShoppingBag },
-    { href: "/guild", label: "公会", icon: Users },
+    { href: "/social", label: "社交", icon: Users },
     { href: "/profile", label: "角色", icon: User },
   ];
 
